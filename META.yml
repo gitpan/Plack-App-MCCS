@@ -1,0 +1,38 @@
+---
+abstract: 'Minify, Compress, Cache-control and Serve static files from Plack applications'
+author:
+  - 'Ido Perlmuter <ido@ido50.net>'
+build_requires:
+  Data::Dumper: 0
+  HTTP::Request: 0
+  Plack::Test: 0
+  Test::More: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.30
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.200015, CPAN::Meta::Converter version 2.112150'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Plack-App-MCCS
+recommends:
+  CSS::Minifier::XS: 0.08
+  IO::Compress::Gzip: 0
+  JavaScript::Minifier::XS: 0.09
+requires:
+  Cwd: 0
+  Fcntl: 0
+  File::Spec::Unix: 0
+  HTTP::Date: 0
+  Module::Load::Conditional: 0
+  Plack::Component: 0
+  Plack::MIME: 0
+  Plack::Util: 0
+  Plack::Util::Accessor: 0
+  parent: 0
+  perl: 5.006
+resources:
+  homepage: http://github.com/ido50/Plack-App-MCCS
+  repository: http://github.com/ido50/Plack-App-MCCS
+version: 0.001
