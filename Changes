@@ -1,5 +1,9 @@
 Revision history for Plack-App-MCCS
 
+0.003     2011-09-16 19:24:24 Asia/Jerusalem
+	- MCCS now doesn't read/write ETag files for resources with the
+	  no-store cache control option.
+
 0.002     2011-09-16 02:36:35 Asia/Jerusalem
 	- MCCS now knows to recognize stale minfied/compressed versions of
 	  files and their etag files, so you don't need to manually remove these
