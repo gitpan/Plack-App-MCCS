@@ -3,7 +3,7 @@ NAME
     files from Plack applications
 
 VERSION
-    version 0.003
+    version 0.004
 
 EXTENDS
     Plack::Component
@@ -406,7 +406,7 @@ AUTHOR
     Ido Perlmuter <ido@ido50.net>
 
 LICENSE AND COPYRIGHT
-    Copyright (c) 2011, Ido Perlmuter "ido@ido50.net".
+    Copyright (c) 2011-2012, Ido Perlmuter "ido@ido50.net".
 
     This module is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself, either version 5.8.1 or any later

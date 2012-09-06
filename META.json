@@ -4,7 +4,7 @@
       "Ido Perlmuter <ido@ido50.net>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.200015, CPAN::Meta::Converter version 2.112150",
+   "generated_by" : "Dist::Zilla version 4.300023, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -22,41 +22,43 @@
       "runtime" : {
          "recommends" : {
             "CSS::Minifier::XS" : "0.08",
-            "IO::Compress::Gzip" : 0,
+            "IO::Compress::Gzip" : "0",
             "JavaScript::Minifier::XS" : "0.09"
          },
          "requires" : {
-            "Cwd" : 0,
-            "Fcntl" : 0,
-            "File::Spec::Unix" : 0,
-            "HTTP::Date" : 0,
-            "Module::Load::Conditional" : 0,
-            "Plack::Component" : 0,
-            "Plack::MIME" : 0,
-            "Plack::Util" : 0,
-            "Plack::Util::Accessor" : 0,
-            "parent" : 0,
-            "perl" : "5.006"
+            "Cwd" : "0",
+            "Fcntl" : "0",
+            "File::Spec::Unix" : "0",
+            "HTTP::Date" : "0",
+            "Module::Load::Conditional" : "0",
+            "Plack::Component" : "0",
+            "Plack::MIME" : "0",
+            "Plack::Util" : "0",
+            "Plack::Util::Accessor" : "0",
+            "parent" : "0",
+            "perl" : "5.006",
+            "strict" : "0",
+            "warnings" : "0"
          }
       },
       "test" : {
          "requires" : {
-            "Data::Dumper" : 0,
-            "HTTP::Request" : 0,
-            "Plack::Test" : 0,
-            "Test::More" : 0
+            "Data::Dumper" : "0",
+            "HTTP::Request" : "0",
+            "Plack::Test" : "0",
+            "Test::More" : "0"
          }
       }
    },
    "release_status" : "stable",
    "resources" : {
-      "homepage" : "http://github.com/ido50/Plack-App-MCCS",
+      "homepage" : "https://github.com/ido50/Plack-App-MCCS",
       "repository" : {
          "type" : "git",
-         "url" : "http://github.com/ido50/Plack-App-MCCS",
-         "web" : "http://github.com/ido50/Plack-App-MCCS"
+         "url" : "https://github.com/ido50/Plack-App-MCCS.git",
+         "web" : "https://github.com/ido50/Plack-App-MCCS"
       }
    },
-   "version" : "0.003"
+   "version" : "0.004"
 }
 
