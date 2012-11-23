@@ -3,7 +3,7 @@ NAME
     files from Plack applications
 
 VERSION
-    version 0.004
+    version 0.005
 
 EXTENDS
     Plack::Component
@@ -283,6 +283,15 @@ CLASS METHODS
     *   compress: like "minify", give this option a false value if you don't
         want "MCCS" to automatically compress files (it will still look for
         precompressed versions).
+
+    *   etag: as above, give this option a false value if you don't want
+        "MCCS" to automatically create and save ETags. Note that this will
+        mean "MCCS" will NOT handle ETags at all (so if the client sends the
+        "If-None-Match" header, "MCCS" will ignore it).
+
+    Giving "minify", "compress" and "etag" false values is useful during
+    development, when you don't want your project to be "polluted" with all
+    those .gz, .min and .etag files.
 
     types - a hash-ref with file extensions that may be served (keys must
     begin with a dot, so give '.css' and not 'css'). Every extension takes a
