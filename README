@@ -2,9 +2,6 @@ NAME
     Plack::App::MCCS - Minify, Compress, Cache-control and Serve static
     files from Plack applications
 
-VERSION
-    version 0.005
-
 EXTENDS
     Plack::Component
 
@@ -17,7 +14,7 @@ SYNOPSIS
 
             # be happy with the defaults:
             builder {
-                    mount '/static' => Plack::App::MCCS->new(root => '/path/to/static_files');
+                    mount '/static' => Plack::App::MCCS->new(root => '/path/to/static_files')->to_app;
                     mount '/' => $app;
             };
 
@@ -36,8 +33,16 @@ SYNOPSIS
                                             cache_control => ['no-cache', 'must-revalidate'],
                                     },
                             },
-                    );
+                    )->to_app;
                     mount '/' => $app;
+            };
+
+            # or use the supplied middleware
+            builder {
+                    enable 'Plack::Middleware::MCCS',
+                            path => qr{^/static/},
+                            root => '/path/to/static_files'; # all other options are supported
+                    $app;
             };
 
 DESCRIPTION
@@ -61,7 +66,7 @@ DESCRIPTION
     precompressed, say automatically in your build process (if such a
     process exists). However, at some projects where you don't have an
     automatic build process, it is not uncommon to forget to
-    minify/precompress. That's where automic minification/compression is
+    minify/precompress. That's where automatic minification/compression is
     useful.
 
     Most importantly, "MCCS" will generate proper Cache Control headers for
@@ -176,9 +181,9 @@ DESCRIPTION
         serve. Future requests to the same file will see the minified
         version and not minify again.
 
-        "MCSS" searches for files that end with ".min.css" and ".min.js",
+        "MCCS" searches for files that end with ".min.css" and ".min.js",
         and that's how it creates them too. So if a request comes to
-        "style.css", "MCSS" will look for "style.min.css", possibly creating
+        "style.css", "MCCS" will look for "style.min.css", possibly creating
         it if not found. The request path remains the same ("style.css")
         though, even internally. If a request comes to "style.min.css"
         (which you don't really want when using "MCCS"), the app will not
@@ -195,9 +200,9 @@ DESCRIPTION
         Future requests to the same file will see the compressed version and
         not compress again.
 
-        "MCSS" searches for files that end with ".gz", and that's how it
+        "MCCS" searches for files that end with ".gz", and that's how it
         creates them too. So if a request comes to "style.css" (and it was
-        minified in the previous step), "MCSS" will look for
+        minified in the previous step), "MCCS" will look for
         "style.min.css.gz", possibly creating it if not found. The request
         path remains the same ("style.css") though, even internally.
 
@@ -209,7 +214,7 @@ DESCRIPTION
         Unless the file has the 'no-store' cache control option, and if the
         client provided the "If-None-Match" header, "MCCS" will look for a
         file that has the same name as the file we're going to serve, plus
-        an ".etag" prefix, such as "style.min.css.gz.etag" for example. If
+        an ".etag" suffix, such as "style.min.css.gz.etag" for example. If
         found, the contents of this file is read and compared with the
         provided ETag. If the two values are equal, "MCCS" will immediately
         return "304 Not Modified".
@@ -225,7 +230,7 @@ DESCRIPTION
         "MCCS" now sets headers, especially cache control headers, as
         appropriate:
 
-        "Content-Encoding" is set to <gzip> if a compressed version is
+        "Content-Encoding" is set to "gzip" if a compressed version is
         returned.
 
         "Content-Length" is set with the size of the file in bytes.
@@ -335,11 +340,8 @@ CAVEATS AND THINGS TO CONSIDER
     *   "Range" requests are not supported. See Plack::App::File::Range if
         you need that.
 
-    *   An "MCCS" middleware is not provided yet, just a Plack::App, so you
-        need to use something like "mount" with Plack::Builder to use it.
-
-    *   "MCCS" is mounted on a directory and can't be set to only serve
-        requests that match a certain regex.
+    *   The app is mounted on a directory and can't be set to only serve
+        requests that match a certain regex. Use the middleware for that.
 
 DIAGNOSTICS
     This module doesn't throw any exceptions, instead returning HTTP errors
@@ -405,7 +407,8 @@ BUGS AND LIMITATIONS
     <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Plack-App-MCCS>.
 
 SEE ALSO
-    Plack::Middleware::Static, Plack::App::File, Plack::Builder.
+    Plack::Middleware::MCCS, Plack::Middleware::Static, Plack::App::File,
+    Plack::Builder.
 
 ACKNOWLEDGMENTS
     Some of this module's code is based on Plack::App::File by Tatsuhiko
@@ -415,7 +418,7 @@ AUTHOR
     Ido Perlmuter <ido@ido50.net>
 
 LICENSE AND COPYRIGHT
-    Copyright (c) 2011-2012, Ido Perlmuter "ido@ido50.net".
+    Copyright (c) 2011-2014, Ido Perlmuter "ido@ido50.net".
 
     This module is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself, either version 5.8.1 or any later

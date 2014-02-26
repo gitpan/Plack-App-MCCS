@@ -2,7 +2,7 @@ package Plack::App::MCCS;
 
 # ABSTRACT: Minify, Compress, Cache-control and Serve static files from Plack applications
 
-our $VERSION = "0.005";
+our $VERSION = "0.006000";
 $VERSION = eval $VERSION;
 
 use strict;
@@ -23,10 +23,6 @@ use Plack::Util::Accessor qw/root defaults types encoding _can_minify_css _can_m
 
 Plack::App::MCCS - Minify, Compress, Cache-control and Serve static files from Plack applications
 
-=head1 VERSION
-
-version 0.005
-
 =head1 EXTENDS
 
 L<Plack::Component>
@@ -41,7 +37,7 @@ L<Plack::Component>
 
 	# be happy with the defaults:
 	builder {
-		mount '/static' => Plack::App::MCCS->new(root => '/path/to/static_files');
+		mount '/static' => Plack::App::MCCS->new(root => '/path/to/static_files')->to_app;
 		mount '/' => $app;
 	};
 
@@ -60,8 +56,16 @@ L<Plack::Component>
 					cache_control => ['no-cache', 'must-revalidate'],
 				},
 			},
-		);
+		)->to_app;
 		mount '/' => $app;
+	};
+
+	# or use the supplied middleware
+	builder {
+		enable 'Plack::Middleware::MCCS',
+			path => qr{^/static/},
+			root => '/path/to/static_files'; # all other options are supported
+		$app;
 	};
 
 =head1 DESCRIPTION
@@ -84,7 +88,7 @@ This means C<MCCS> needs to have write privileges to the static files directory.
 It would be better if files are preminified and precompressed, say automatically
 in your build process (if such a process exists). However, at some projects
 where you don't have an automatic build process, it is not uncommon to
-forget to minify/precompress. That's where automic minification/compression
+forget to minify/precompress. That's where automatic minification/compression
 is useful.
 
 Most importantly, C<MCCS> will generate proper Cache Control headers for
@@ -202,9 +206,9 @@ installed, C<MCCS> will minify the file, save the minified version to disk,
 and mark it as the version to serve. Future requests to the same file will
 see the minified version and not minify again.
 
-C<MCSS> searches for files that end with C<.min.css> and C<.min.js>, and
+C<MCCS> searches for files that end with C<.min.css> and C<.min.js>, and
 that's how it creates them too. So if a request comes to C<style.css>,
-C<MCSS> will look for C<style.min.css>, possibly creating it if not found.
+C<MCCS> will look for C<style.min.css>, possibly creating it if not found.
 The request path remains the same (C<style.css>) though, even internally.
 If a request comes to C<style.min.css> (which you don't really want when
 using C<MCCS>), the app will not attempt to minify it again (so you won't
@@ -220,9 +224,9 @@ the file, save the gzipped version to disk, and mark it as the version to
 serve. Future requests to the same file will see the compressed version and
 not compress again.
 
-C<MCSS> searches for files that end with C<.gz>, and that's how it creates
+C<MCCS> searches for files that end with C<.gz>, and that's how it creates
 them too. So if a request comes to C<style.css> (and it was minified in
-the previous step), C<MCSS> will look for C<style.min.css.gz>, possibly
+the previous step), C<MCCS> will look for C<style.min.css.gz>, possibly
 creating it if not found. The request path remains the same (C<style.css>) though,
 even internally.
 
@@ -235,7 +239,7 @@ date, and return C<304 Not Modified> immediately if not.
 Unless the file has the 'no-store' cache control option, and if the client
 provided the C<If-None-Match> header, C<MCCS> will look for
 a file that has the same name as the file we're going to serve, plus an
-C<.etag> prefix, such as C<style.min.css.gz.etag> for example. If found,
+C<.etag> suffix, such as C<style.min.css.gz.etag> for example. If found,
 the contents of this file is read and compared with the provided ETag. If
 the two values are equal, C<MCCS> will immediately return C<304 Not Modified>.
 
@@ -250,7 +254,7 @@ to the same file will see this ETag file, so it is not created again.
 
 C<MCCS> now sets headers, especially cache control headers, as appropriate:
 
-C<Content-Encoding> is set to <gzip> if a compressed version is returned.
+C<Content-Encoding> is set to C<gzip> if a compressed version is returned.
 
 C<Content-Length> is set with the size of the file in bytes.
 
@@ -552,34 +556,28 @@ sub _determine_cache_control {
 
 	# MCCS default values
 	my $valid_for = 86400; # expire in 1 day by default
-	my $cache_control = ['public']; # allow authenticated caching by default
+	my @cache_control = ('public'); # allow authenticated caching by default
 
 	# user provided default values
 	$valid_for = $self->defaults->{valid_for}
 		if $self->defaults && defined $self->defaults->{valid_for};
-	$cache_control = $self->defaults->{cache_control}
+	@cache_control = @{$self->defaults->{cache_control}}
 		if $self->defaults && defined $self->defaults->{cache_control};
 
 	# user provided extension specific settings
 	if ($ext) {
 		$valid_for = $self->types->{$ext}->{valid_for}
 			if $self->types && $self->types->{$ext} && defined $self->types->{$ext}->{valid_for};
-		$cache_control = $self->types->{$ext}->{cache_control}
+		@cache_control = @{$self->types->{$ext}->{cache_control}}
 			if $self->types && $self->types->{$ext} && defined $self->types->{$ext}->{cache_control};
 	}
 
 	# unless cache control has no-store, prepend max-age to it
-	my $cache = 1;
-	foreach (@$cache_control) {
-		if ($_ eq 'no-store') {
-			undef $cache;
-			last;
-		}
-	}
-	unshift(@$cache_control, 'max-age='.$valid_for)
+	my $cache = scalar(grep { $_ eq 'no-store' } @cache_control) ? 0 : 1;
+	unshift(@cache_control, 'max-age='.$valid_for)
 		if $cache;
 
-	return ($valid_for, $cache_control, $cache);
+	return ($valid_for, \@cache_control, $cache);
 }
 
 sub _serve_file {
@@ -745,11 +743,8 @@ browser caching (and also server load should be decreased).
 
 =item * C<Range> requests are not supported. See L<Plack::App::File::Range> if you need that.
 
-=item * An C<MCCS> middleware is not provided yet, just a L<Plack::App>,
-so you need to use something like C<mount> with L<Plack::Builder> to use it.
-
-=item * C<MCCS> is mounted on a directory and can't be set to only serve
-requests that match a certain regex.
+=item * The app is mounted on a directory and can't be set to only serve
+requests that match a certain regex. Use the L<middleware|Plack::Middleware::MCCS> for that.
 
 =back
 
@@ -837,7 +832,7 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Plack-App-MCCS>.
 
 =head1 SEE ALSO
 
-L<Plack::Middleware::Static>, L<Plack::App::File>, L<Plack::Builder>.
+L<Plack::Middleware::MCCS>, L<Plack::Middleware::Static>, L<Plack::App::File>, L<Plack::Builder>.
 
 =head1 ACKNOWLEDGMENTS
 
@@ -850,7 +845,7 @@ Ido Perlmuter <ido@ido50.net>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2011-2012, Ido Perlmuter C<< ido@ido50.net >>.
+Copyright (c) 2011-2014, Ido Perlmuter C<< ido@ido50.net >>.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself, either version

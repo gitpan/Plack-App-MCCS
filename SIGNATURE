@@ -1,5 +1,5 @@
 This file contains message digests of all files listed in MANIFEST,
-signed via the Module::Signature module, version 0.69.
+signed via the Module::Signature module, version 0.73.
 
 To verify the content in this distribution, first make sure you have
 Module::Signature installed, then type:
@@ -14,22 +14,21 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA256
 
-SHA1 c4bc238e4ffb3c5eee7c0203240484ab16585146 Changes
+SHA1 c2363f7f429191d32dd85585fca2758534f600ad Changes
 SHA1 5cd83baf83939d2cbd84f003b47e73134d1d4ff4 INSTALL
-SHA1 d38085d38a0d811f563a79af5ca3594c53b9d948 LICENSE
-SHA1 748c7389448c84bfdb68829fe3bd4bf8e37cc3f9 MANIFEST
-SHA1 8962c55779dbd503a5ef8fa1ac75b4e29959b05a MANIFEST.SKIP
-SHA1 6d38e0f0caada54fda981c91225a88f7421c8ffc META.json
-SHA1 560423e785df4b850f33c2b540efc4d90eb96bf4 META.yml
-SHA1 9999eaefdddbc918ff739f95a947938535518019 Makefile.PL
-SHA1 5da1db63a84c08137507940194adba88bc68fc7e README
-SHA1 552cd2910c0a7abe3e96b21bb6beef39e1f1f99d dist.ini
-SHA1 d13d588057e712927fb89fe6339f0d69fb4cf729 lib/Plack/App/MCCS.pm
-SHA1 f60ce8aa7692328314b283dedf8fc2f231e7e15b t/00-load.t
-SHA1 3c4295fc9fd684de2056890d6be0a05c58812e5a t/01-basic.t
+SHA1 8582065cd14fffaec80bf3b157124ec6fbaef873 LICENSE
+SHA1 50f41c03479473dadc455c3865fe7d6274dc659a MANIFEST
+SHA1 e4e0920f97419ad1ed635febcc37e099c12d2d1b MANIFEST.SKIP
+SHA1 233dbfca95cbd2638f9bb0452d9f546c3054cc67 META.json
+SHA1 cf21bddf96e43f681a1c457c00122e3ef330a86d Makefile.PL
+SHA1 c6f019667fa808be98b57985ef5203b3d7e6f473 README
+SHA1 9f766926b8d8307fcfdeacc7c591672cb534ff0a dist.ini
+SHA1 d6007d77cc262482312ff2d4fc201ebb5f78846e lib/Plack/App/MCCS.pm
+SHA1 82f761b8a371285a024f875e293281b4153602ac lib/Plack/Middleware/MCCS.pm
+SHA1 4a82783357859b46867e383439961dc17849fc86 t/00-load.t
+SHA1 d983d7ee01be0e32678297b928477f82bd1e3349 t/01-app.t
+SHA1 610d5dfe1940f938bd8b8a4bb2446a929f4f3f03 t/02-middleware.t
 SHA1 87768d177f8c2e2df9c591cde869e7c8a245555e t/release-dist-manifest.t
-SHA1 9433c240fe590bc404ab68ff63984df763e347ed t/release-pod-coverage.t
-SHA1 b30cbdfaf935017c4568c0c91b242438cb87786e t/release-pod-syntax.t
 SHA1 fbf5489838096fd400218afd4e96b12b1a670674 t/rootdir/dir/subdir/smashingpumpkins.txt
 SHA1 e434e95f23ea654911317f89ae6509f6d78b6051 t/rootdir/mccs.png
 SHA1 0259c96137f14a20dac2fac3fb428d7e3a540562 t/rootdir/script.js
@@ -41,9 +40,9 @@ SHA1 f58984c0b87e0a61f1a60ab4c0573756ad8aa95e t/rootdir/style2.less
 SHA1 7d6415605d95f22e50a006820836db02df0cb0de t/rootdir/style3.css
 SHA1 f04198bc59ff693f89086c70c81fad6941efebc4 t/rootdir/text
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iF4EAREIAAYFAlCvjiYACgkQa4OHQAFM10dq0wD+PZpq/nT7j4rK3DMm//dCGrvs
-IoMzw/HM2jaGkBG2tnMBAKW+oUfymisX4drjbZABfp/ZHAS4VE+Z+slYTwm+jCoe
-=PsnY
+iF4EAREIAAYFAlMOLAUACgkQa4OHQAFM10ej4wEAph7efwvi2aFLxSy35dYQBCoV
+pGfUkcVuau3+cewlqMIBAIP9y+V0CjVrFDPyzrefs16+oAhfy84CyOKa2eKSkba1
+=Dl09
 -----END PGP SIGNATURE-----
